@@ -50,9 +50,8 @@ export default {
           genreList.push(disc.genre);
         }
       });
-
       return genreList;
-    }
+    },
   },
   methods: {
     fetchData(url) {
@@ -61,17 +60,24 @@ export default {
       });
     },
     onGenreFilter(filter){
+      console.log("Filter called", filter);
       if(filter === "All"){
+        console.log("log inside filter if");
         this.filteredDiscList = this.discList
       } else {
           this.filteredDiscList = this.discList.filter(el => {
             return el.genre === filter;
           });
         }
+
+        console.log("log di filtered list", this.filteredDiscList);
     }
   },
   mounted() {
     this.fetchData("https://flynn.boolean.careers/exercises/api/array/music");
+    setTimeout(() => {
+      this.onGenreFilter("All")
+    }, 500);
   }
 
 }

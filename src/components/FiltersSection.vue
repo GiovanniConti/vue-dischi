@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      selectedGenre: "",
+      selectedGenre: "All",
     }
   },
   methods: {
