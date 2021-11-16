@@ -3,13 +3,14 @@
     <div class="row justify-content-center pb-5">
       <div class="col-6">
         <FiltersSection
-        :availableGenres="genreList"
+          :availableGenres="genreList"
+          @filterSelected= "onGenreFilter"
         ></FiltersSection>
       </div>
     </div>
     <div class="row row-cols-5 g-4">
       <div class="col d-flex"
-        v-for="(disc, i) in discList"
+        v-for="(disc, i) in filteredDiscList"
         :key="i"
       >
         <DiscCard
@@ -37,6 +38,7 @@ export default {
   data() {
     return {
       discList: [],
+      filteredDiscList: [],
     };
   },
   computed: {
@@ -58,6 +60,15 @@ export default {
         this.discList = apiResp.data.response;
       });
     },
+    onGenreFilter(filter){
+      if(filter === "All"){
+        this.filteredDiscList = this.discList
+      } else {
+          this.filteredDiscList = this.discList.filter(el => {
+            return el.genre === filter;
+          });
+        }
+    }
   },
   mounted() {
     this.fetchData("https://flynn.boolean.careers/exercises/api/array/music");
