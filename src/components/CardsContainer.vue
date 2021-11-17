@@ -4,13 +4,13 @@
       <div class="col-6">
         <FiltersSection
           :availableGenres="genreList"
-          @filterSelected= "onGenreFilter"
+          @filterSelected= "selectedFilter"
         ></FiltersSection>
       </div>
     </div>
     <div class="row row-cols-5 g-4">
       <div class="col d-flex"
-        v-for="(disc, i) in filteredDiscList"
+        v-for="(disc, i) in filteredList"
         :key="i"
       >
         <DiscCard
@@ -37,14 +37,13 @@ export default {
   },
   data() {
     return {
-      discList: [],
-      filteredDiscList: [],
+      discList: [],      
+      selectedGenre: "All",
     };
   },
   computed: {
     genreList() {
       const genreList = [];
-
       this.discList.forEach((disc) => {
         if(!genreList.includes(disc.genre)){
           genreList.push(disc.genre);
@@ -52,6 +51,15 @@ export default {
       });
       return genreList;
     },
+    filteredList(){
+      let filteredDiscList = this.discList
+      if(this.selectedGenre != "All"){
+        filteredDiscList = this.discList.filter(el => {
+          return el.genre === this.selectedGenre;
+        });
+      }
+        return filteredDiscList;
+    }
   },
   methods: {
     fetchData(url) {
@@ -59,25 +67,12 @@ export default {
         this.discList = apiResp.data.response;
       });
     },
-    onGenreFilter(filter){
-      console.log("Filter called", filter);
-      if(filter === "All"){
-        console.log("log inside filter if");
-        this.filteredDiscList = this.discList
-      } else {
-          this.filteredDiscList = this.discList.filter(el => {
-            return el.genre === filter;
-          });
-        }
-
-        console.log("log di filtered list", this.filteredDiscList);
+    selectedFilter(filter){
+      this.selectedGenre = filter;
     }
   },
   mounted() {
     this.fetchData("https://flynn.boolean.careers/exercises/api/array/music");
-    setTimeout(() => {
-      this.onGenreFilter("All")
-    }, 500);
   }
 
 }
@@ -86,3 +81,5 @@ export default {
 <style lang="scss">
 
 </style>
+
+
